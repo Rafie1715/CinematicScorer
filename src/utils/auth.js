@@ -1,7 +1,7 @@
 // src/utils/auth.js
 
-export const CLIENT_ID = "5343c452f9014d568ff239bfcfc801b1";
-const REDIRECT_URI = "http://192.168.1.6:5173/";
+export const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
+const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 
 // 1. Fungsi helper untuk generate random string (Code Verifier)
 const generateRandomString = (length) => {

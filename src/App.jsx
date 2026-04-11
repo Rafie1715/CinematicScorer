@@ -10,6 +10,7 @@ function App() {
   const [token, setToken] = useState(null);
   const [dnaData, setDnaData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
 
   // 1. FUNGSI BARU: Menukar 'code' dari URL menjadi Access Token
   const fetchToken = async (code) => {
@@ -22,7 +23,7 @@ function App() {
         client_id: CLIENT_ID,
         grant_type: 'authorization_code',
         code: code,
-        redirect_uri: "http://192.168.1.6:5173/",
+        redirect_uri: REDIRECT_URI,
         code_verifier: codeVerifier,
       }),
     };
