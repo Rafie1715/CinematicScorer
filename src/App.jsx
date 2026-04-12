@@ -1,170 +1,75 @@
-// src/App.jsx
-import { useEffect, useState } from 'react';
-import { redirectToSpotify, CLIENT_ID } from './utils/auth'; 
-import { setAccessToken, getTopTracks, getAudioFeatures } from './services/spotifyApi';
-import DNARadar from './components/DNARadar';
-import { Music, Activity, Flame, Loader2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { useState } from 'react';
+import { getAccessToken, searchTrackAndArtist } from './services/spotify';
+import { classifyByGenre } from './utils/classifier';
+import MovieResult from './components/MovieResult';
+import SearchBar from './components/SearchBar';
+import { Film, Sparkles } from 'lucide-react';
 
 function App() {
-  const [token, setToken] = useState(null);
-  const [dnaData, setDnaData] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const REDIRECT_URI = import.meta.env.VITE_REDIRECT_URI;
+  const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState(null);
 
-  // 1. FUNGSI BARU: Menukar 'code' dari URL menjadi Access Token
-  const fetchToken = async (code) => {
-    const codeVerifier = window.localStorage.getItem('code_verifier');
-
-    const payload = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({
-        client_id: CLIENT_ID,
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: REDIRECT_URI,
-        code_verifier: codeVerifier,
-      }),
-    };
-
+  const handleAnalyze = async (e) => {
+    e.preventDefault();
+    if (!query) return;
+    setLoading(true);
     try {
-      // Menggunakan URL Endpoint resmi Spotify untuk mendapatkan Token
-      const response = await fetch("https://accounts.spotify.com/api/token", payload);
-      const data = await response.json();
-      return data.access_token;
-    } catch (error) {
-      console.error("Error saat menukar token:", error);
-      return null;
-    }
-  };
-
-  // 2. USEEFFECT DI-UPDATE: Mendeteksi '?code=' dari URL setelah login
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const code = urlParams.get('code');
-
-    const initLogin = async () => {
-      if (code) {
-        const accessToken = await fetchToken(code);
-        if (accessToken) {
-          setToken(accessToken);
-          setAccessToken(accessToken);
-          // Membersihkan URL agar tidak ada '?code=...' yang panjang dan jelek
-          window.history.replaceState({}, document.title, "/"); 
-          generatePersona(accessToken);
-        }
+      const token = await getAccessToken();
+      const trackWithGenre = await searchTrackAndArtist(query, token);
+      if (trackWithGenre) {
+        const classification = classifyByGenre(trackWithGenre.genres, trackWithGenre.name);
+        setResult({
+          ...classification,
+          trackName: trackWithGenre.name, // Nama lagu
+          artistName: trackWithGenre.artists[0].name, // Nama artis
+          albumCover: trackWithGenre.album.images[0]?.url // AMBIL COVER ALBUM
+        });
       }
-    };
-
-    initLogin();
-  }, []);
-
-  // Fungsi pengambilan data tetap sama
-  const generatePersona = async () => {
-    setIsLoading(true);
-    try {
-      const tracks = await getTopTracks();
-      const ids = tracks.map(t => t.id).join(',');
-      const features = await getAudioFeatures(ids);
-      
-      const validFeatures = features.filter(f => f !== null);
-
-      const avg = (key) => validFeatures.reduce((acc, curr) => acc + curr[key], 0) / validFeatures.length;
-      
-      const chartData = [
-        { subject: 'Energy', A: Math.round(avg('energy') * 100) },
-        { subject: 'Danceability', A: Math.round(avg('danceability') * 100) },
-        { subject: 'Valence', A: Math.round(avg('valence') * 100) },
-        { subject: 'Acousticness', A: Math.round(avg('acousticness') * 100) },
-        { subject: 'Instrumentalness', A: Math.round(avg('instrumentalness') * 100) },
-      ];
-      
-      setDnaData(chartData);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+    } catch (err) {
+      console.error(err);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  // Tampilan Halaman Login
-  if (!token) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-darkbase px-4">
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center"
-        >
-          <h1 className="text-6xl font-black mb-6 tracking-tighter text-white">
-            Persona<span className="text-spotify">Music</span>
-          </h1>
-          <p className="text-zinc-400 mb-10 text-lg max-w-md mx-auto">
-            Analisis kebiasaan mendengarkanmu dan temukan DNA musik visualmu berdasarkan data Spotify.
-          </p>
-          
-          {/* 3. TOMBOL LOGIN DI-UPDATE: Menggunakan button onClick, bukan <a href> */}
-          <button 
-            onClick={redirectToSpotify} 
-            className="inline-flex items-center gap-3 bg-spotify hover:bg-[#1ed760] text-black font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105"
-          >
-            <Music size={20} />
-            Connect with Spotify
-          </button>
-
-        </motion.div>
-      </div>
-    );
-  }
-
-  // Tampilan Utama (Dashboard)
   return (
-    <div className="min-h-screen bg-darkbase p-6 md:p-12">
-      <div className="max-w-4xl mx-auto space-y-10">
-        <header className="flex items-center justify-between border-b border-zinc-800 pb-6">
-          <h2 className="text-3xl font-black tracking-tight text-white">Your Music DNA</h2>
-          <button 
-            onClick={() => { setToken(null); window.location.reload(); }}
-            className="text-sm text-zinc-500 hover:text-white transition"
-          >
-            Logout
-          </button>
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 selection:bg-red-500/30">
+      {/* Background Decorative Element */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-[10%] -left-[10%] w-[40%] h-[40%] bg-red-900/20 blur-[120px] rounded-full" />
+        <div className="absolute top-[60%] -right-[10%] w-[30%] h-[40%] bg-blue-900/10 blur-[120px] rounded-full" />
+      </div>
+
+      <div className="relative max-w-4xl mx-auto py-20 px-6 space-y-16">
+        <header className="text-center space-y-6">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-zinc-900/50 border border-zinc-800 text-zinc-400 text-sm mb-4">
+            <Sparkles size={14} className="text-yellow-500" />
+            <span>AI-Powered Soundtrack Analysis</span>
+          </div>
+          <h1 className="text-6xl md:text-7xl font-black tracking-tighter italic uppercase leading-none">
+            Cinematic <span className="text-red-600">Scorer</span>
+          </h1>
+          <p className="text-zinc-500 text-lg max-w-xl mx-auto">
+            Masukkan lagu favoritmu dan biarkan algoritma kami menentukan di genre film mana lagu itu seharusnya berada.
+          </p>
         </header>
 
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20">
-            <Loader2 className="animate-spin text-spotify mb-4" size={40} />
-            <p className="text-zinc-400 font-medium">Menganalisis frekuensi audio...</p>
-          </div>
+        <SearchBar 
+          query={query} 
+          setQuery={setQuery} 
+          onSearch={handleAnalyze} 
+          loading={loading} 
+        />
+
+        {result ? (
+          <MovieResult result={result} />
         ) : (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
-          >
-            <div className="md:col-span-2">
-              {dnaData.length > 0 && <DNARadar data={dnaData} />}
-            </div>
-
-            <div className="space-y-4">
-              <div className="bg-zinc-900 p-6 rounded-3xl border border-zinc-800">
-                <Activity className="text-spotify mb-3" size={28} />
-                <p className="text-sm text-zinc-400 font-medium mb-1">Dominant Trait</p>
-                <p className="text-2xl font-bold text-white">
-                  {dnaData.length > 0 ? [...dnaData].sort((a, b) => b.A - a.A)[0].subject : 'Loading'}
-                </p>
-              </div>
-
-              <div className="bg-zinc-900 p-6 rounded-3xl border border-zinc-800">
-                <Flame className="text-orange-500 mb-3" size={28} />
-                <p className="text-sm text-zinc-400 font-medium mb-1">Energy Level</p>
-                <p className="text-2xl font-bold text-white">
-                  {dnaData.length > 0 ? `${dnaData.find(d => d.subject === 'Energy')?.A}%` : '0%'}
-                </p>
-              </div>
-            </div>
-          </motion.div>
+          /* UX: Empty State */
+          <div className="py-20 border-2 border-dashed border-zinc-900 rounded-3xl flex flex-col items-center justify-center text-zinc-700">
+            <Film size={48} className="mb-4 opacity-20" />
+            <p>Belum ada data untuk dianalisis</p>
+          </div>
         )}
       </div>
     </div>
