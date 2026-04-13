@@ -7,11 +7,14 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "accuracy:dashboard": "node scripts/accuracy-dashboard.mjs",
+    "accuracy:hard": "node scripts/accuracy-dashboard.mjs --dataset=scripts/data/real-world-hard-dataset.json"
   },
   "dependencies": {
     "axios": "^1.15.0",
     "framer-motion": "^12.38.0",
+    "html-to-image": "^1.11.13",
     "lucide-react": "^1.8.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",

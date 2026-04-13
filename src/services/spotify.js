@@ -1,14 +1,8 @@
 // src/services/spotify.js
 import axios from 'axios';
 
-const CLIENT_ID = import.meta.env.VITE_SPOTIFY_CLIENT_ID;
-const CLIENT_SECRET = import.meta.env.VITE_SPOTIFY_CLIENT_SECRET;
-
 export const getAccessToken = async () => {
-  const authHeader = btoa(`${CLIENT_ID}:${CLIENT_SECRET}`);
-  const res = await axios.post('https://accounts.spotify.com/api/token', 'grant_type=client_credentials', {
-    headers: { 'Authorization': `Basic ${authHeader}`, 'Content-Type': 'application/x-www-form-urlencoded' }
-  });
+  const res = await axios.post('/api/spotify-token');
   return res.data.access_token;
 };
 

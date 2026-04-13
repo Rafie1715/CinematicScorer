@@ -1,6 +1,20 @@
+@import url('https://fonts.googleapis.com/css2?family=General+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap');
 @import "tailwindcss";
 
 body {
-  background-color: #121212;
-  color: white;
+  background-color: #070707;
+  color: #f8fafc;
+  font-family: 'General Sans', 'Segoe UI', sans-serif;
+  background-image:
+    radial-gradient(circle at 20% 15%, rgba(249, 115, 22, 0.12), transparent 35%),
+    radial-gradient(circle at 80% 0%, rgba(34, 211, 238, 0.1), transparent 30%);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Sora', 'General Sans', sans-serif;
+  letter-spacing: 0.01em;
 }

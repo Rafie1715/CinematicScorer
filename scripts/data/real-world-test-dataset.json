@@ -1,0 +1,190 @@
+[
+  {
+    "id": "id-01",
+    "title": "Secukupnya",
+    "artist": "Hindia",
+    "genres": ["indonesian pop", "ballad", "indie folk"],
+    "expectedTrope": "MELANCHOLY"
+  },
+  {
+    "id": "id-02",
+    "title": "Rehat",
+    "artist": "Kunto Aji",
+    "genres": ["indonesian indie", "acoustic", "ambient"],
+    "expectedTrope": "MELANCHOLY"
+  },
+  {
+    "id": "id-03",
+    "title": "Goodbye Love",
+    "artist": "Nadin Amizah",
+    "genres": ["indonesian pop", "ballad", "dream pop"],
+    "expectedTrope": "MELANCHOLY",
+    "analysisMode": "lyric",
+    "lyricsSnippet": "goodbye my love i am alone tears in the night"
+  },
+  {
+    "id": "id-04",
+    "title": "To The Bone",
+    "artist": "Pamungkas",
+    "genres": ["indonesian pop", "love song", "city pop"],
+    "expectedTrope": "ROMCOM"
+  },
+  {
+    "id": "id-05",
+    "title": "Summer Kiss",
+    "artist": "RAN",
+    "genres": ["funk pop", "dance pop", "disco"],
+    "expectedTrope": "ROMCOM"
+  },
+  {
+    "id": "id-06",
+    "title": "Cheer Up Day",
+    "artist": "Yura Yunita",
+    "genres": ["dance pop", "bubblegum", "k-pop"],
+    "expectedTrope": "ROMCOM"
+  },
+  {
+    "id": "id-07",
+    "title": "Run Through Fire",
+    "artist": "Dream Theatering",
+    "genres": ["rock", "metal", "aggressive"],
+    "expectedTrope": "ACTION",
+    "analysisMode": "lyric",
+    "lyricsSnippet": "we fight we run we burn and rise"
+  },
+  {
+    "id": "id-08",
+    "title": "Thunder Riot",
+    "artist": "Feast Unit",
+    "genres": ["rap rock", "stadium", "power"],
+    "expectedTrope": "ACTION"
+  },
+  {
+    "id": "id-09",
+    "title": "Battle Street",
+    "artist": "Rocket Core",
+    "genres": ["hardcore", "metal", "rock"],
+    "expectedTrope": "ACTION"
+  },
+  {
+    "id": "id-10",
+    "title": "Shadow Hall",
+    "artist": "Sigil Room",
+    "genres": ["horror", "dark", "drone"],
+    "expectedTrope": "HORROR",
+    "analysisMode": "lyric",
+    "lyricsSnippet": "shadow in the dark i fear the ghost tonight"
+  },
+  {
+    "id": "id-11",
+    "title": "Nightmare Basement",
+    "artist": "Banshee Tape",
+    "genres": ["creepy", "doom", "experimental"],
+    "expectedTrope": "HORROR"
+  },
+  {
+    "id": "id-12",
+    "title": "Haunted Steps",
+    "artist": "Nocturne Unit",
+    "genres": ["black metal", "dark ambient", "noise"],
+    "expectedTrope": "HORROR"
+  },
+  {
+    "id": "id-13",
+    "title": "Kingdom of Dust",
+    "artist": "Hans Zimmer-ish",
+    "genres": ["orchestra", "cinematic", "soundtrack"],
+    "expectedTrope": "EPIC"
+  },
+  {
+    "id": "id-14",
+    "title": "Hero Legacy",
+    "artist": "Audiomachine Clone",
+    "genres": ["symphony", "film score", "trailer music"],
+    "expectedTrope": "EPIC"
+  },
+  {
+    "id": "id-15",
+    "title": "Empire Calls",
+    "artist": "Two Steps Echo",
+    "genres": ["classical", "epic", "orchestra"],
+    "expectedTrope": "EPIC"
+  },
+  {
+    "id": "id-16",
+    "title": "Midnight Case",
+    "artist": "The Noir Society",
+    "genres": ["jazz", "noir", "trip hop"],
+    "expectedTrope": "SUSPENSE"
+  },
+  {
+    "id": "id-17",
+    "title": "Secret Avenue",
+    "artist": "Downtempo Bureau",
+    "genres": ["r&b", "downtempo", "soul"],
+    "expectedTrope": "SUSPENSE"
+  },
+  {
+    "id": "id-18",
+    "title": "Detective Rain",
+    "artist": "City Blues Unit",
+    "genres": ["blues", "funk", "jazz"],
+    "expectedTrope": "SUSPENSE"
+  },
+  {
+    "id": "id-19",
+    "title": "Teen Wild Heart",
+    "artist": "The Rebel Kids",
+    "genres": ["pop punk", "emo", "alternative rock"],
+    "expectedTrope": "TEEN_ANGST"
+  },
+  {
+    "id": "id-20",
+    "title": "Garage Youth",
+    "artist": "Broken Locker",
+    "genres": ["garage rock", "grunge", "punk"],
+    "expectedTrope": "TEEN_ANGST"
+  },
+  {
+    "id": "id-21",
+    "title": "Neon Protocol",
+    "artist": "Cyber Diva",
+    "genres": ["synth", "techno", "industrial"],
+    "expectedTrope": "CYBERPUNK"
+  },
+  {
+    "id": "id-22",
+    "title": "Machine City",
+    "artist": "Night Runner",
+    "genres": ["electronic", "drum and bass", "glitch"],
+    "expectedTrope": "CYBERPUNK"
+  },
+  {
+    "id": "id-23",
+    "title": "Laugh Parade",
+    "artist": "Maliq-ish",
+    "genres": ["comedy", "ska", "quirky"],
+    "expectedTrope": "COMEDY"
+  },
+  {
+    "id": "id-24",
+    "title": "Sunny Joke",
+    "artist": "Ukulele Club",
+    "genres": ["ukulele", "happy", "novelty"],
+    "expectedTrope": "COMEDY"
+  },
+  {
+    "id": "id-25",
+    "title": "Road to Flores",
+    "artist": "Float Project",
+    "genres": ["indie rock", "travel", "world music"],
+    "expectedTrope": "ADVENTURE"
+  },
+  {
+    "id": "id-26",
+    "title": "Nature Story",
+    "artist": "Guruh Archive",
+    "genres": ["instrumental", "new age", "nature"],
+    "expectedTrope": "DOCUMENTARY"
+  }
+]
