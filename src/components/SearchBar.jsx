@@ -29,8 +29,8 @@ const SearchBar = ({
   const activeLensDescription = lensDescription[sceneContext] || lensDescription.auto;
 
   const modeDescription = analysisMode === 'lyric'
-    ? 'Lyric Mode: pakai metadata + sinyal lirik (kalau tersedia) untuk membaca tema dan makna lagu.'
-    : 'Metadata Mode: analisis dari judul lagu, genre artis, dan Scene Lens.';
+    ? 'Mode Lirik: memakai metadata + sinyal lirik (jika tersedia) untuk membaca tema dan makna lagu.'
+    : 'Mode Metadata: analisis dari judul lagu, genre artis, dan Scene Lens.';
 
   return (
     <div className="max-w-2xl mx-auto w-full space-y-3">
@@ -52,13 +52,13 @@ const SearchBar = ({
           disabled={loading}
           className="absolute left-0 right-0 bottom-0 sm:left-auto sm:right-2 sm:top-1/2 sm:bottom-auto sm:-translate-y-1/2 bg-orange-600 hover:bg-orange-500 text-white font-bold py-2 px-4 sm:px-6 rounded-xl transition-all disabled:opacity-50 flex items-center justify-center gap-2 text-sm"
         >
-          {loading ? <Loader2 className="animate-spin" size={18} /> : 'Analyze'}
+          {loading ? <Loader2 className="animate-spin" size={18} /> : 'Analisis'}
         </button>
       </form>
-      <p className="text-xs text-zinc-500 px-1">Tip: coba format judul + artis untuk hasil lebih akurat.</p>
+      <p className="text-sm text-zinc-500 px-1">Tip: coba format judul + artis untuk hasil lebih akurat.</p>
 
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/35 px-3 py-3">
-        <p className="text-[11px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">Analysis Source</p>
+        <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-2">Sumber Analisis</p>
         <div className="flex items-center gap-2 mb-2">
           <button
             type="button"
@@ -69,7 +69,7 @@ const SearchBar = ({
                 : 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:text-white hover:border-zinc-500'
             }`}
           >
-            Metadata
+            Mode Metadata
           </button>
           <button
             type="button"
@@ -80,15 +80,15 @@ const SearchBar = ({
                 : 'border-zinc-700 bg-zinc-900 text-zinc-300 hover:text-white hover:border-zinc-500'
             }`}
           >
-            Lyric
+            Mode Lirik
           </button>
         </div>
-        <p className="text-xs text-zinc-500 leading-relaxed">{modeDescription}</p>
+        <p className="text-sm text-zinc-500 leading-relaxed">{modeDescription}</p>
       </div>
 
       <div className="rounded-xl border border-zinc-800 bg-zinc-900/35 px-3 py-3">
-        <p className="text-[11px] uppercase tracking-wider text-zinc-500 font-semibold mb-2">Scene Lens</p>
-        <p className="text-xs text-zinc-400 mb-3 leading-relaxed">Pilih konteks adegan untuk mengarahkan hasil klasifikasi sesuai kebutuhanmu.</p>
+        <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-2">Scene Lens</p>
+        <p className="text-sm text-zinc-400 mb-3 leading-relaxed">Pilih konteks adegan untuk mengarahkan hasil klasifikasi sesuai kebutuhanmu.</p>
         <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {contextOptions.map((option) => {
             const active = sceneContext === option.value;
@@ -108,19 +108,19 @@ const SearchBar = ({
             );
           })}
         </div>
-        <p className="text-xs text-zinc-500 mt-3 leading-relaxed">{activeLensDescription}</p>
+        <p className="text-sm text-zinc-500 mt-3 leading-relaxed">{activeLensDescription}</p>
       </div>
 
       {history.length > 0 && (
         <div className="rounded-xl border border-zinc-800 bg-zinc-900/40 px-3 py-2">
           <div className="flex items-center justify-between mb-2">
-            <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Recent searches</p>
+            <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Pencarian Terakhir</p>
             <button
               type="button"
               onClick={onClearHistory}
-              className="text-[11px] text-zinc-500 hover:text-zinc-300 transition-colors"
+              className="text-xs text-zinc-500 hover:text-zinc-300 transition-colors"
             >
-              Clear
+              Hapus
             </button>
           </div>
           <div className="flex flex-wrap gap-2">

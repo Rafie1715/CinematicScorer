@@ -306,7 +306,7 @@ function App() {
         <header className="text-center space-y-4 md:space-y-6">
           <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-zinc-900/65 border border-zinc-700 text-zinc-300 text-xs md:text-sm mb-3 md:mb-4 backdrop-blur-sm">
             <Sparkles size={14} className="text-yellow-500" />
-            <span>AI-Powered Soundtrack Analysis</span>
+            <span>Analisis Soundtrack Berbasis AI</span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight italic uppercase leading-[0.95] drop-shadow-[0_8px_28px_rgba(239,68,68,0.3)]">
             Cinematic <span className="text-orange-500">Scorer</span>
@@ -332,66 +332,6 @@ function App() {
           onInputFocus={() => setIsInputFocused(true)}
           onInputBlur={() => setIsInputFocused(false)}
         />
-
-        <section className="max-w-2xl mx-auto w-full rounded-2xl border border-zinc-800 bg-zinc-950/45 p-3 sm:p-4">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div>
-              <p className="text-xs uppercase tracking-wider text-zinc-400 font-semibold">Preferensi Hasil (Opsional)</p>
-              <p className="text-[11px] text-zinc-500">Gunakan jika kamu ingin menyimpan atau memindahkan preferensi klasifikasi ke perangkat lain.</p>
-            </div>
-            <button
-              type="button"
-              onClick={() => setShowPreferenceTools((prev) => !prev)}
-              className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-[11px] text-zinc-200 hover:border-zinc-500 transition-colors"
-            >
-              {showPreferenceTools ? 'Sembunyikan' : 'Tampilkan'}
-            </button>
-          </div>
-
-          {showPreferenceTools && (
-            <>
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <button
-                  type="button"
-                  onClick={handleExportCalibration}
-                  className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-xs text-cyan-100 hover:bg-cyan-500/20 transition-colors"
-                  title="Simpan preferensi dan riwayat feedback ke file JSON"
-                >
-                  <Download size={13} />
-                  Simpan Preferensi
-                </button>
-                <button
-                  type="button"
-                  onClick={() => importInputRef.current?.click()}
-                  className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1.5 text-xs text-amber-100 hover:bg-amber-500/20 transition-colors"
-                  title="Muat kembali preferensi dari file JSON"
-                >
-                  <Upload size={13} />
-                  Muat Preferensi
-                </button>
-                <button
-                  type="button"
-                  onClick={handleResetCalibration}
-                  className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-200 hover:border-zinc-500 transition-colors"
-                  title="Kembalikan profil preferensi ke nilai awal"
-                >
-                  <RotateCcw size={13} />
-                  Atur Ulang
-                </button>
-                <input
-                  ref={importInputRef}
-                  type="file"
-                  accept="application/json"
-                  className="hidden"
-                  onChange={handleImportCalibration}
-                />
-              </div>
-              <p className="mt-2 text-[11px] text-zinc-500">
-                Format file: JSON dari tombol Simpan Preferensi, atau JSON yang berisi properti history.
-              </p>
-            </>
-          )}
-        </section>
 
         {error && (
           <div className="max-w-2xl mx-auto w-full rounded-2xl border border-red-500/30 bg-red-950/40 px-4 py-3 text-sm text-red-200">
@@ -449,7 +389,7 @@ function App() {
           <section className="rounded-3xl border border-zinc-800 bg-zinc-950/40 p-5 backdrop-blur-sm">
             <div className="flex items-center gap-2 mb-4">
               <Heart size={16} className="text-rose-400" />
-              <p className="text-sm uppercase tracking-wider text-zinc-400 font-semibold">Favorite Results</p>
+              <p className="text-sm uppercase tracking-wider text-zinc-400 font-semibold">Hasil Favorit</p>
             </div>
             <div className="grid sm:grid-cols-2 gap-3">
               {favorites.map((fav) => (
@@ -471,6 +411,66 @@ function App() {
             </div>
           </section>
         )}
+
+        <section className="max-w-2xl mx-auto w-full rounded-2xl border border-zinc-800/80 bg-zinc-950/35 p-3 sm:p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <p className="text-xs uppercase tracking-wider text-zinc-400 font-semibold">Pengaturan Lanjutan</p>
+              <p className="text-xs text-zinc-400">Opsional untuk backup atau pindah preferensi klasifikasi ke perangkat lain.</p>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPreferenceTools((prev) => !prev)}
+              className="rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-200 hover:border-zinc-500 transition-colors"
+            >
+              {showPreferenceTools ? 'Sembunyikan' : 'Lihat'}
+            </button>
+          </div>
+
+          {showPreferenceTools && (
+            <>
+              <div className="mt-3 flex flex-wrap items-center gap-2">
+                <button
+                  type="button"
+                  onClick={handleExportCalibration}
+                  className="inline-flex items-center gap-2 rounded-full border border-cyan-400/40 bg-cyan-500/10 px-3 py-1.5 text-xs text-cyan-100 hover:bg-cyan-500/20 transition-colors"
+                  title="Simpan preferensi dan riwayat feedback ke file JSON"
+                >
+                  <Download size={13} />
+                  Simpan Preferensi
+                </button>
+                <button
+                  type="button"
+                  onClick={() => importInputRef.current?.click()}
+                  className="inline-flex items-center gap-2 rounded-full border border-amber-400/40 bg-amber-500/10 px-3 py-1.5 text-xs text-amber-100 hover:bg-amber-500/20 transition-colors"
+                  title="Muat kembali preferensi dari file JSON"
+                >
+                  <Upload size={13} />
+                  Muat Preferensi
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetCalibration}
+                  className="inline-flex items-center gap-2 rounded-full border border-zinc-700 bg-zinc-900 px-3 py-1.5 text-xs text-zinc-200 hover:border-zinc-500 transition-colors"
+                  title="Kembalikan profil preferensi ke nilai awal"
+                >
+                  <RotateCcw size={13} />
+                  Atur Ulang
+                </button>
+                <input
+                  ref={importInputRef}
+                  type="file"
+                  accept="application/json"
+                  className="hidden"
+                  onChange={handleImportCalibration}
+                />
+              </div>
+              <p className="mt-2 text-xs text-zinc-400">
+                Format file: JSON dari tombol Simpan Preferensi, atau JSON yang berisi properti history.
+              </p>
+            </>
+          )}
+        </section>
       </div>
     </div>
   );

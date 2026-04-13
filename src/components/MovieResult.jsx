@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useRef, useState } from 'react';
-import { BarChart3, Download, Heart, Layers3, Share2, Sparkles } from 'lucide-react';
+import { Download, Heart, Share2, Sparkles } from 'lucide-react';
 import { formatDuration, capitalizeText } from '../utils/formatters';
 
 const FeatureRadar = lazy(() => import('./FeatureRadar'));
@@ -30,15 +30,15 @@ const MovieResult = ({
   const sceneLabel = result.appliedContext && result.appliedContext !== 'auto'
     ? `Scene Lens: ${result.appliedContext}`
     : 'Scene Lens: auto';
-  const analysisModeLabel = result.analysisMode === 'lyric' ? 'Source: metadata + lyric' : 'Source: metadata';
+  const analysisModeLabel = result.analysisMode === 'lyric' ? 'Sumber: metadata + lirik' : 'Sumber: metadata';
   const lyricStatusLabel = result.analysisMode === 'lyric'
-    ? (result.lyricStatus === 'found' ? 'Lyric: found' : 'Lyric: unavailable')
+    ? (result.lyricStatus === 'found' ? 'Lirik: ditemukan' : 'Lirik: tidak tersedia')
     : '';
   const [showCorrectionOptions, setShowCorrectionOptions] = useState(false);
   const [calibrationStatus, setCalibrationStatus] = useState('');
   const [shareStatus, setShareStatus] = useState('');
   const [showMobileActionBar, setShowMobileActionBar] = useState(true);
-  const [activeView, setActiveView] = useState('overview');
+  const [showDetails, setShowDetails] = useState(false);
   const cardRef = useRef(null);
   const lastScrollY = useRef(0);
 
@@ -168,7 +168,7 @@ const MovieResult = ({
         {/* Kolom Kanan: Teks & Detail */}
         <div className="flex-1 flex flex-col justify-center min-w-0">
           <span className="text-xs font-bold uppercase tracking-widest text-zinc-500 mb-2">
-            Predicted Soundtrack For:
+            Prediksi Soundtrack Untuk:
           </span>
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-black mb-2 sm:mb-3 text-white leading-tight break-words">
             {result.genre}
@@ -177,87 +177,66 @@ const MovieResult = ({
             "{result.description}"
           </p>
 
-          <div className="mb-4 inline-flex rounded-xl border border-zinc-700 bg-zinc-900/70 p-1 w-fit">
-            <button
-              type="button"
-              onClick={() => setActiveView('overview')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                activeView === 'overview' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-300 hover:text-white'
-              }`}
-            >
-              <Layers3 size={13} />
-              Overview
-            </button>
-            <button
-              type="button"
-              onClick={() => setActiveView('deep')}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs rounded-lg transition-colors ${
-                activeView === 'deep' ? 'bg-zinc-100 text-zinc-900' : 'text-zinc-300 hover:text-white'
-              }`}
-            >
-              <BarChart3 size={13} />
-              Deep Dive
-            </button>
-          </div>
-
           <div className="mb-6 space-y-2">
             <div className="flex flex-wrap items-center gap-2">
               <button
                 type="button"
                 onClick={() => onToggleFavorite?.(result)}
-                className={`hidden sm:inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider rounded-full border px-2.5 sm:px-3 py-1.5 transition-colors ${
+                className={`hidden sm:inline-flex items-center gap-2 text-xs uppercase tracking-wider rounded-full border px-2.5 sm:px-3 py-1.5 transition-colors ${
                   isFavorite
                     ? 'border-rose-400/60 bg-rose-500/15 text-rose-200'
                     : 'border-zinc-700 bg-zinc-900/70 text-zinc-300 hover:border-zinc-500'
                 }`}
               >
                 <Heart size={14} className={isFavorite ? 'fill-rose-300' : ''} />
-                {isFavorite ? 'Saved to Favorites' : 'Save Result'}
+                {isFavorite ? 'Tersimpan di Favorit' : 'Simpan Hasil'}
               </button>
               <button
                 type="button"
                 onClick={handleCopySummary}
-                className="hidden sm:inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider rounded-full border border-zinc-700 bg-zinc-900/70 text-zinc-300 px-2.5 sm:px-3 py-1.5 hover:border-zinc-500 transition-colors"
+                className="hidden sm:inline-flex items-center gap-2 text-xs uppercase tracking-wider rounded-full border border-zinc-700 bg-zinc-900/70 text-zinc-300 px-2.5 sm:px-3 py-1.5 hover:border-zinc-500 transition-colors"
               >
                 <Share2 size={14} />
-                Copy Summary
+                Salin Ringkasan
               </button>
               <button
                 type="button"
                 onClick={handleDownloadCard}
-                className="hidden sm:inline-flex items-center gap-2 text-[11px] sm:text-xs uppercase tracking-wider rounded-full border border-zinc-700 bg-zinc-900/70 text-zinc-300 px-2.5 sm:px-3 py-1.5 hover:border-zinc-500 transition-colors"
+                className="hidden sm:inline-flex items-center gap-2 text-xs uppercase tracking-wider rounded-full border border-zinc-700 bg-zinc-900/70 text-zinc-300 px-2.5 sm:px-3 py-1.5 hover:border-zinc-500 transition-colors"
               >
                 <Download size={14} />
-                Download Card
+                Unduh Kartu
               </button>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[11px] text-zinc-500 uppercase tracking-wider">Heuristic Engine v2</span>
-              <span className="text-[10px] uppercase tracking-wider rounded-full border border-cyan-500/40 px-2 py-1 text-cyan-200 bg-cyan-500/10">
-                {analysisModeLabel}
-              </span>
-              {lyricStatusLabel && (
-                <span className="text-[10px] uppercase tracking-wider rounded-full border border-zinc-700 px-2 py-1 text-zinc-300 bg-zinc-900/70">
-                  {lyricStatusLabel}
+            {showDetails && (
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs text-zinc-400 uppercase tracking-wider">Mesin Heuristik v2</span>
+                <span className="text-xs uppercase tracking-wider rounded-full border border-cyan-500/40 px-2 py-1 text-cyan-200 bg-cyan-500/10">
+                  {analysisModeLabel}
                 </span>
-              )}
-              <span className={`text-[10px] uppercase tracking-wider rounded-full border px-2 py-1 ${signalBadgeClass}`}>
-                Signal {signalQuality}
-              </span>
-              <span className="text-[10px] uppercase tracking-wider rounded-full border border-zinc-700 px-2 py-1 text-zinc-300 bg-zinc-900/70">
-                {sceneLabel}
-              </span>
-            </div>
+                {lyricStatusLabel && (
+                  <span className="text-xs uppercase tracking-wider rounded-full border border-zinc-700 px-2 py-1 text-zinc-300 bg-zinc-900/70">
+                    {lyricStatusLabel}
+                  </span>
+                )}
+                <span className={`text-xs uppercase tracking-wider rounded-full border px-2 py-1 ${signalBadgeClass}`}>
+                  Sinyal {signalQuality}
+                </span>
+                <span className="text-xs uppercase tracking-wider rounded-full border border-zinc-700 px-2 py-1 text-zinc-300 bg-zinc-900/70">
+                  {sceneLabel}
+                </span>
+              </div>
+            )}
           </div>
 
           {shareStatus && (
-            <p className="text-[11px] text-cyan-200 mb-4">{shareStatus}</p>
+            <p className="text-xs text-cyan-200 mb-4">{shareStatus}</p>
           )}
 
           <div className="mb-5 sm:mb-6 rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:p-4">
             <div className="flex items-center justify-between mb-2 text-xs uppercase tracking-wider text-zinc-500 font-semibold">
-              <span>Confidence</span>
+              <span>Tingkat Keyakinan</span>
               <span>{confidence}%</span>
             </div>
             <div className="h-2 rounded-full bg-zinc-800 overflow-hidden">
@@ -268,7 +247,7 @@ const MovieResult = ({
                 {result.matchedKeywords.map((keyword) => (
                   <span
                     key={keyword}
-                    className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-200"
+                    className="text-xs uppercase tracking-wider px-2 py-1 rounded-full bg-red-500/15 border border-red-500/30 text-red-200"
                   >
                     {keyword}
                   </span>
@@ -277,18 +256,33 @@ const MovieResult = ({
             )}
           </div>
 
-          {activeView === 'deep' && sortedScores.length > 0 && (
+          <div className="mb-5 sm:mb-6 rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:p-4">
+            <p className="text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">Alasan Singkat</p>
+            <p className="text-sm text-zinc-200 leading-relaxed">{result.cinematicReason}</p>
+          </div>
+
+          <div className="mb-5 sm:mb-6">
+            <button
+              type="button"
+              onClick={() => setShowDetails((prev) => !prev)}
+              className="rounded-full border border-zinc-700 bg-zinc-900 px-3.5 py-1.5 text-xs text-zinc-200 hover:border-zinc-500 transition-colors"
+            >
+              {showDetails ? 'Sembunyikan Detail' : 'Lihat Detail'}
+            </button>
+          </div>
+
+          {showDetails && sortedScores.length > 0 && (
             <div className="mb-5 sm:mb-6 rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:p-4">
               <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-3">Trope Score Breakdown</p>
               {signalQuality === 'low' && (
-                <p className="text-[11px] text-amber-300/90 mb-3">
-                  Low-signal mode: {result.signalReason || 'Data genre terlalu minim, hasil bersifat perkiraan.'}
+                <p className="text-xs text-amber-200 mb-3">
+                  Sinyal rendah: {result.signalReason || 'Data genre terlalu minim, hasil bersifat perkiraan.'}
                 </p>
               )}
               <div className="space-y-2">
                 {sortedScores.map((entry) => (
                   <div key={entry.trope}>
-                    <div className="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+                    <div className="flex items-center justify-between text-xs text-zinc-300 mb-1">
                       <span>{entry.genre}</span>
                       <span>{entry.normalizedScore}%</span>
                     </div>
@@ -301,48 +295,49 @@ const MovieResult = ({
             </div>
           )}
 
-          <div className="mb-5 sm:mb-6 rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:p-4">
-            <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-2">Tema & Makna Lagu</p>
-            <p className="text-sm text-zinc-300 leading-relaxed mb-3">{result.songMeaning}</p>
-            {result.lyricExcerpt && (
-              <p className="text-xs text-zinc-400 italic border-l-2 border-cyan-500/40 pl-3 mb-3">
-                "{result.lyricExcerpt}"
-              </p>
-            )}
-            {result.inferredThemes?.length > 0 && (
-              <div className="flex flex-wrap gap-2 mb-3">
-                {result.inferredThemes.map((theme) => (
-                  <span
-                    key={theme}
-                    className="text-[10px] uppercase tracking-wider px-2 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-200"
-                  >
-                    {theme}
-                  </span>
-                ))}
-              </div>
-            )}
-            <p className="text-xs text-zinc-400 leading-relaxed mb-2">{result.cinematicReason}</p>
-            <p className="text-[11px] text-zinc-500">{result.explanationBasis}</p>
-          </div>
+          {showDetails && (
+            <div className="mb-5 sm:mb-6 rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:p-4">
+              <p className="text-xs uppercase tracking-wider text-zinc-400 font-semibold mb-2">Tema & Makna Lagu</p>
+              <p className="text-sm text-zinc-300 leading-relaxed mb-3">{result.songMeaning}</p>
+              {result.lyricExcerpt && (
+                <p className="text-xs text-zinc-300 italic border-l-2 border-cyan-500/40 pl-3 mb-3">
+                  "{result.lyricExcerpt}"
+                </p>
+              )}
+              {result.inferredThemes?.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-3">
+                  {result.inferredThemes.map((theme) => (
+                    <span
+                      key={theme}
+                      className="text-xs uppercase tracking-wider px-2 py-1 rounded-full bg-cyan-500/10 border border-cyan-400/30 text-cyan-200"
+                    >
+                      {theme}
+                    </span>
+                  ))}
+                </div>
+              )}
+              <p className="text-xs text-zinc-300 leading-relaxed mb-2">{result.explanationBasis}</p>
+            </div>
+          )}
 
-          {result.alternatives?.length > 0 && (
+          {showDetails && result.alternatives?.length > 0 && (
             <div className="mb-5 sm:mb-6 rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:p-4">
               <div className="flex items-center gap-2 mb-3">
                 <Sparkles size={14} className="text-amber-400" />
-                <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Alternative Cinematic Vibes</p>
+                <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold">Alternatif Vibe Sinematik</p>
               </div>
               <div className="grid sm:grid-cols-2 gap-2">
                 {result.alternatives.map((item) => (
                   <div key={item.trope} className="rounded-lg border border-zinc-700/70 bg-zinc-900/70 p-2.5">
                     <p className="text-xs text-zinc-200 font-semibold">{item.genre}</p>
-                    <p className="text-[11px] text-zinc-500">Confidence {item.confidence}%</p>
+                    <p className="text-xs text-zinc-300">Keyakinan {item.confidence}%</p>
                   </div>
                 ))}
               </div>
             </div>
           )}
 
-          {activeView === 'deep' && (
+          {showDetails && (
           <div className="mb-5 sm:mb-6 rounded-xl border border-white/10 bg-zinc-950/40 p-3 sm:p-4">
             <p className="text-xs uppercase tracking-wider text-zinc-500 font-semibold mb-2">Bantu Kalibrasi</p>
             <p className="text-sm text-zinc-400 mb-3">Apakah hasil klasifikasi ini sudah sesuai menurutmu?</p>
@@ -380,7 +375,7 @@ const MovieResult = ({
                         setCalibrationStatus(success ? `Feedback disimpan: lebih cocok ke ${option.label}.` : 'Feedback gagal disimpan. Coba analyze ulang.');
                         setShowCorrectionOptions(false);
                       }}
-                      className="text-[11px] rounded-full border border-zinc-700 bg-zinc-900 px-2.5 py-1 text-zinc-300 hover:text-white hover:border-zinc-500 transition-colors"
+                      className="text-xs rounded-full border border-zinc-700 bg-zinc-900 px-2.5 py-1 text-zinc-300 hover:text-white hover:border-zinc-500 transition-colors"
                     >
                       {option.label}
                     </button>
@@ -389,13 +384,13 @@ const MovieResult = ({
             )}
 
               {calibrationStatus && (
-                <p className="text-[11px] text-emerald-300 mt-3">{calibrationStatus}</p>
+                <p className="text-xs text-emerald-300 mt-3">{calibrationStatus}</p>
               )}
           </div>
           )}
           
           <div className="border-t border-white/10 pt-5 sm:pt-6 mt-auto">
-            <p className="text-sm text-zinc-500 mb-1">Analyzed Track:</p>
+            <p className="text-sm text-zinc-400 mb-1">Track Dianalisis:</p>
             <p className="text-xl sm:text-2xl font-bold text-white break-words">
               {displayTrackName} <span className="text-zinc-500 font-normal">- {displayArtistName}</span>
             </p>
@@ -416,30 +411,30 @@ const MovieResult = ({
           <button
             type="button"
             onClick={() => onToggleFavorite?.(result)}
-            className={`inline-flex items-center justify-center gap-1.5 rounded-xl border px-2 py-2 text-[11px] uppercase tracking-wide transition-colors ${
+            className={`inline-flex items-center justify-center gap-1.5 rounded-xl border px-2 py-2 text-xs uppercase tracking-wide transition-colors ${
               isFavorite
                 ? 'border-rose-400/70 bg-rose-500/15 text-rose-200'
                 : 'border-zinc-700 bg-zinc-900 text-zinc-200'
             }`}
           >
             <Heart size={13} className={isFavorite ? 'fill-rose-300' : ''} />
-            Save
+            Simpan
           </button>
           <button
             type="button"
             onClick={handleCopySummary}
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-200 px-2 py-2 text-[11px] uppercase tracking-wide"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-200 px-2 py-2 text-xs uppercase tracking-wide"
           >
             <Share2 size={13} />
-            Copy
+            Salin
           </button>
           <button
             type="button"
             onClick={handleDownloadCard}
-            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-200 px-2 py-2 text-[11px] uppercase tracking-wide"
+            className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-zinc-700 bg-zinc-900 text-zinc-200 px-2 py-2 text-xs uppercase tracking-wide"
           >
             <Download size={13} />
-            Save PNG
+            Unduh PNG
           </button>
         </div>
       </div>
