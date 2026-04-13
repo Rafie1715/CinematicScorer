@@ -2,6 +2,14 @@
 
 Aplikasi klasifikasi lagu ke persona soundtrack film berbasis data Spotify.
 
+## Ringkasan
+
+- Input lagu/artis dari Spotify
+- Klasifikasi ke trope sinematik dengan explainability
+- Dukungan mode `Metadata` dan `Lyric`
+- Kalibrasi preferensi user dengan semi-online learning ringan
+- Dashboard akurasi dev (baseline vs tuned)
+
 ## Fitur
 
 - Weighted scoring classifier lintas trope (bukan first-match)
@@ -11,6 +19,8 @@ Aplikasi klasifikasi lagu ke persona soundtrack film berbasis data Spotify.
 - Semi-online learning ringan dari feedback kalibrasi user
 - Search history (maksimal 5 query terakhir)
 - Preferensi mode analisis terakhir otomatis disimpan
+- Panel `Preferensi Hasil (Opsional)` yang bisa ditampilkan/disembunyikan (supaya user awam tidak bingung)
+- Favicon custom bertema Cinematic Scorer (`public/favicon.svg`)
 - Spotify token flow yang lebih aman lewat endpoint server-side (`/api/spotify-token`)
 - Proxy endpoint lirik multi-provider (`/api/lyrics`) untuk hindari CORS di client
 
@@ -34,6 +44,10 @@ Script akan:
 - Menampilkan perbandingan akurasi baseline vs tuned
 - Menampilkan metrik per trope, top error, confusion matrix ringkas, dan top adaptive boosts
 
+Dataset yang tersedia:
+- `scripts/data/real-world-test-dataset.json` (set utama)
+- `scripts/data/real-world-hard-dataset.json` (set noisy/ambigu)
+
 Opsional override path:
 
 ```bash
@@ -46,12 +60,19 @@ Catatan format dataset:
 - `analysisMode`: `metadata` atau `lyric` (opsional)
 - `lyricsSnippet`: dipakai jika `analysisMode` = `lyric` (opsional)
 
-## Kalibrasi: Export / Import
+## Preferensi Hasil (UI)
 
-Di UI tersedia tombol:
-- `Export Feedback`: download JSON berisi `profile` + `history`
-- `Import Feedback`: upload JSON (boleh array event langsung, atau object dengan properti `history`)
-- `Reset Kalibrasi`: reset profile dan history lokal
+Panel ini bersifat opsional dan bisa di-toggle `Tampilkan/Sembunyikan`.
+
+Tombol yang tersedia:
+- `Simpan Preferensi`: download JSON berisi `profile` + `history`
+- `Muat Preferensi`: upload JSON (boleh array event langsung, atau object dengan properti `history`)
+- `Atur Ulang`: reset profile dan history lokal
+
+Use case umum:
+- Pindah preferensi antar perangkat
+- Backup preferensi sebelum eksperimen tuning
+- Restore preferensi setelah reset browser/storage
 
 Format minimal satu event feedback:
 
@@ -75,6 +96,10 @@ Format minimal satu event feedback:
 npm install
 ```
 
+Catatan Windows PowerShell:
+- Jika `npm` terblokir execution policy, gunakan `npm.cmd`.
+- Contoh: `npm.cmd run dev`, `npm.cmd run accuracy:hard`.
+
 2. Buat file `.env` di root project
 
 ```env
@@ -93,6 +118,15 @@ npm run dev
 Pada mode development, endpoint `/api/spotify-token` dilayani oleh middleware di `vite.config.js`, jadi secret tidak dikirim ke browser.
 
 Endpoint `/api/lyrics` juga dilayani oleh middleware dev agar mode Lyric bisa dipakai langsung.
+
+## Script NPM
+
+- `npm run dev`: jalankan aplikasi di mode development
+- `npm run build`: build production
+- `npm run preview`: preview hasil build
+- `npm run lint`: lint seluruh project
+- `npm run accuracy:dashboard`: dashboard akurasi pada dataset utama
+- `npm run accuracy:hard`: dashboard akurasi pada dataset hard/noisy
 
 ## Deploy
 
