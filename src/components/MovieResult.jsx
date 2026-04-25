@@ -140,7 +140,7 @@ const MovieResult = ({
   return (
     <div
       ref={cardRef}
-      className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${result.color} p-1 shadow-2xl mt-8`}
+      className={`relative overflow-hidden rounded-3xl bg-gradient-to-br ${result.color} p-1 shadow-2xl mt-8 animate-float-soft`}
     >
       <div className="bg-[#09090b]/95 backdrop-blur-xl rounded-[22px] p-4 sm:p-6 flex flex-col md:flex-row gap-5 sm:gap-8">
         
@@ -154,10 +154,10 @@ const MovieResult = ({
           
           {/* Radar Chart ditampilkan di bawah gambar */}
           {result.stats && (
-            <div className="bg-zinc-900/50 rounded-xl p-2 border border-white/5">
-               <p className="text-xs text-center text-zinc-500 mb-2 font-semibold tracking-wider">AI HEURISTIC STATS</p>
+            <div className="bg-zinc-900/50 rounded-xl p-3 sm:p-4 border border-white/5 overflow-visible">
+               <p className="text-xs text-center text-zinc-400 mb-2 font-semibold tracking-wider">AI HEURISTIC STATS</p>
                <Suspense
-                 fallback={<div className="h-64 rounded-lg bg-zinc-800/70 animate-pulse" />}
+                 fallback={<div className="h-72 sm:h-80 rounded-lg bg-zinc-800/70 animate-pulse" />}
                >
                  <FeatureRadar data={result.stats} />
                </Suspense>

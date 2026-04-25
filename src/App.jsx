@@ -12,7 +12,7 @@ import {
   saveCalibrationHistory,
 } from './utils/calibrationLearning';
 import SearchBar from './components/SearchBar';
-import { Download, Film, Heart, RotateCcw, Sparkles, Upload } from 'lucide-react';
+import { ArrowRight, Download, Film, Heart, PlayCircle, RotateCcw, Sparkles, SlidersHorizontal, Upload, Wand2 } from 'lucide-react';
 
 const loadMovieResult = () => import('./components/MovieResult');
 const MovieResult = lazy(loadMovieResult);
@@ -48,6 +48,24 @@ function App() {
   const importInputRef = useRef(null);
 
   const quickExamples = ['Bohemian Rhapsody', 'Time Hans Zimmer', '505 Arctic Monkeys', 'The Night We Met'];
+  const quickSteps = [
+    {
+      icon: Wand2,
+      title: 'Cari lagu',
+      description: 'Ketik judul lagu atau nama artis. Coba format "judul + artis" untuk hasil paling akurat.',
+    },
+    {
+      icon: SlidersHorizontal,
+      title: 'Pilih konteks',
+      description: 'Sesuaikan Scene Lens dan Mode Lirik/Metadata agar hasil lebih cocok dengan kebutuhanmu.',
+    },
+    {
+      icon: PlayCircle,
+      title: 'Baca hasil',
+      description: 'Lihat genre film, tingkat keyakinan, alasan singkat, lalu buka detail jika ingin tahu lebih dalam.',
+    },
+  ];
+  const valuePills = ['Genre film paling cocok', 'Alasan singkat yang mudah dipahami', 'Detail lanjutan bila dibutuhkan'];
 
   useEffect(() => {
     const rawHistory = localStorage.getItem('cinematic-scorer-history');
@@ -303,18 +321,69 @@ function App() {
       </div>
 
       <div className="relative max-w-4xl mx-auto pt-10 pb-28 md:py-20 px-4 sm:px-6 space-y-10 md:space-y-16">
-        <header className="text-center space-y-4 md:space-y-6">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-8 -z-10 h-72 w-72 -translate-x-1/2 rounded-full bg-orange-500/18 blur-3xl animate-glow-pulse"
+        />
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute right-0 top-44 -z-10 h-60 w-60 rounded-full bg-cyan-400/12 blur-3xl animate-float-soft"
+        />
+
+        <header
+          className="text-center space-y-4 md:space-y-6"
+        >
           <div className="inline-flex items-center gap-2 px-3 md:px-4 py-1.5 md:py-2 rounded-full bg-zinc-900/65 border border-zinc-700 text-zinc-300 text-xs md:text-sm mb-3 md:mb-4 backdrop-blur-sm">
             <Sparkles size={14} className="text-yellow-500" />
             <span>Analisis Soundtrack Berbasis AI</span>
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tight italic uppercase leading-[0.95] drop-shadow-[0_8px_28px_rgba(239,68,68,0.3)]">
-            Cinematic <span className="text-orange-500">Scorer</span>
+            <span className="inline-block animate-float-soft">Cinematic</span>{' '}
+            <span className="text-orange-500 inline-block animate-glow-pulse">Scorer</span>
           </h1>
           <p className="text-zinc-400 text-sm sm:text-base md:text-lg max-w-xl mx-auto leading-relaxed px-2">
             Masukkan lagu favoritmu dan biarkan algoritma kami menentukan di genre film mana lagu itu seharusnya berada.
           </p>
         </header>
+
+        <section
+          className="max-w-4xl mx-auto rounded-3xl border border-zinc-800 bg-zinc-950/45 p-4 sm:p-5"
+        >
+          <div className="flex flex-col gap-3 sm:gap-4">
+            <div className="flex flex-wrap items-center gap-2 justify-center">
+              {valuePills.map((pill) => (
+                <span
+                  key={pill}
+                  className="text-xs sm:text-sm rounded-full border border-zinc-700 bg-zinc-900/70 px-3 py-1.5 text-zinc-300 shadow-[0_0_0_1px_rgba(255,255,255,0.02)]"
+                >
+                  {pill}
+                </span>
+              ))}
+            </div>
+            <div className="grid gap-3 md:grid-cols-3">
+              {quickSteps.map((step, index) => (
+                <div
+                  key={step.title}
+                  className="rounded-2xl border border-zinc-800 bg-[#111113] p-4 shadow-[0_1px_0_rgba(255,255,255,0.02)] relative overflow-hidden"
+                >
+                  <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-orange-400/50 to-transparent" />
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="flex h-8 w-8 items-center justify-center rounded-full bg-orange-500/15 text-orange-300 text-xs font-bold border border-orange-400/30">
+                      {index + 1}
+                    </span>
+                    <step.icon size={16} className="text-orange-300" />
+                    <h2 className="text-sm sm:text-base font-semibold text-white">{step.title}</h2>
+                  </div>
+                  <p className="text-sm text-zinc-400 leading-relaxed">{step.description}</p>
+                </div>
+              ))}
+            </div>
+            <div className="flex items-center justify-center gap-2 text-xs text-zinc-500 pt-1">
+              <ArrowRight size={12} className="text-orange-400" />
+              <span>Hasil akan langsung menjelaskan genre, makna singkat, dan alasan sinematiknya.</span>
+            </div>
+          </div>
+        </section>
 
         <SearchBar 
           query={query} 
@@ -365,7 +434,9 @@ function App() {
             />
           </Suspense>
         ) : (
-          <div className="py-12 md:py-16 border-2 border-dashed border-zinc-900 rounded-3xl flex flex-col items-center justify-center text-zinc-700 px-4 md:px-6">
+          <div
+            className="py-12 md:py-16 border-2 border-dashed border-zinc-900 rounded-3xl flex flex-col items-center justify-center text-zinc-700 px-4 md:px-6"
+          >
             <Film size={48} className="mb-4 opacity-20" />
             <p className="text-center mb-6">
               {error ? 'Belum ada hasil. Kamu bisa coba contoh pencarian di bawah.' : 'Belum ada data untuk dianalisis'}
